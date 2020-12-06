@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: random-giphy
+  name: random-giphy
+spec:
+  selector:
+    matchLabels:
+      app: random-giphy
+  template:
+    metadata:
+      labels:
+        app: random-giphy
+    spec:
+      containers:
+      - image: registry.gitlab.com/mrkwskiti/godal-container-registries/random-giphy
+        imagePullPolicy: Always
+        name: random-giphy
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+      imagePullSecrets:
+      - name: godal-gitlab-container-registries
