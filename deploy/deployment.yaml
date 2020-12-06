@@ -5,6 +5,13 @@ metadata:
     run: random-giphy
   name: random-giphy
 spec:
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   selector:
     matchLabels:
       app: random-giphy
@@ -19,7 +26,7 @@ spec:
         name: random-giphy
         resources:
           limits:
-            memory: "64Mi"
+            memory: "32Mi"
             cpu: "100m"
         readinessProbe:
           httpGet:
@@ -33,3 +40,8 @@ spec:
           failureThreshold: 3
       imagePullSecrets:
       - name: godal-gitlab-container-registries
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
